@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Примеры работ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #F8C8DC;
+      --pink-soft: #FCE4EC;
+      --brown: #4A2C2A;
+      --brown-soft: #6B4E4A;
+      --cream: #FFF8F5;
+      --white: #FFFFFF;
+      --shadow: 0 12px 40px rgba(74, 44, 42, 0.12);
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--pink-soft);
+      color: var(--brown);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: var(--pink);
+      padding: 60px 40px 45px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: clamp(34px, 5.5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 17px;
+      color: var(--brown-soft);
+    }
+
+    .works {
+      padding: 50px 30px 90px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 26px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.35s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .project-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 18px 45px rgba(74, 44, 42, 0.16);
+    }
+
+    .project-image {
+      height: 200px;
+      background: #f0e0d8;
+      overflow: hidden;
+    }
+
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .project-card:hover .project-image img {
+      transform: scale(1.05);
+    }
+
+    .project-body {
+      padding: 24px 26px 28px;
+    }
+
+    .project-body h3 {
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .project-body p {
+      font-size: 14px;
+      color: var(--brown-soft);
+      margin-bottom: 18px;
+    }
+
+    .project-btn {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--brown);
+      border-bottom: 2px solid var(--brown);
+      padding-bottom: 1px;
+      display: inline-block;
+    }
+
+    .plus-icon {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      z-index: 3;
+      transition: all 0.3s ease;
+      color: var(--brown);
+    }
+
+    .project-card:hover .plus-icon {
+      background: var(--brown);
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(74, 44, 42, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 26px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(25px) scale(0.97);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--pink-soft);
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      color: var(--brown);
+      transition: 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--brown);
+      color: white;
+    }
+
+    .modal-header {
+      padding: 32px 36px 0;
+    }
+
+    .modal-header h3 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .modal-header p {
+      font-size: 15px;
+      color: var(--brown-soft);
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 36px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: 2px solid #e8d5d0;
+      background: white;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--brown-soft);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--brown);
+      color: var(--brown);
+    }
+
+    .tab-btn.active {
+      background: var(--brown);
+      border-color: var(--brown);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 0 36px 36px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.25s;
+      background: #f0e0d8;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.03);
+    }
+
+    .gallery.one-col {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery.one-col img {
+      height: 320px;
+      object-fit: contain;
+      background: #1a1a1a;
+    }
+
+    .file-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--pink-soft);
+      color: var(--brown);
+      text-decoration: none;
+      padding: 14px 26px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .file-btn:hover {
+      background: var(--brown);
+      color: white;
+    }
+
+    .links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 13px;
+      color: var(--brown-soft);
+      background: var(--cream);
+    }
+
+    @media (max-width: 750px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .header { padding: 45px 20px 35px; }
+      .works { padding: 35px 16px 70px; }
+      .modal-header, .tabs, .tab-content { padding-left: 22px; padding-right: 22px; }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .gallery.one-col img { height: 240px; }
+    }
+
+    /* ===== Cute stickers & decorations ===== */
+    .sticker {
+      position: fixed;
+      font-size: 28px;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0.85;
+      animation: floaty 6s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(74,44,42,0.12));
+    }
+    .sticker-1 { top: 12%; left: 3%; animation-delay: 0s; }
+    .sticker-2 { top: 28%; right: 4%; animation-delay: 1.2s; font-size: 24px; }
+    .sticker-3 { top: 55%; left: 2%; animation-delay: 2.4s; font-size: 26px; }
+    .sticker-4 { top: 72%; right: 3%; animation-delay: 0.8s; font-size: 22px; }
+    .sticker-5 { bottom: 18%; left: 5%; animation-delay: 1.8s; font-size: 24px; }
+    .sticker-6 { bottom: 8%; right: 6%; animation-delay: 3s; font-size: 20px; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-12px) rotate(4deg); }
+    }
+
+    .header {
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before,
+    .header::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .header::before {
+      width: 180px; height: 180px;
+      background: #fff;
+      top: -40px; left: -30px;
+    }
+    .header::after {
+      width: 120px; height: 120px;
+      background: #F8C8DC;
+      bottom: -30px; right: 8%;
+      box-shadow: 60px -40px 0 20px rgba(255,255,255,0.4);
+    }
+
+    .header-deco {
+      position: absolute;
+      font-size: 32px;
+      opacity: 0.9;
+      animation: floaty 5s ease-in-out infinite;
+    }
+    .header-deco.left { left: 8%; top: 30%; animation-delay: 0.5s; }
+    .header-deco.right { right: 8%; top: 25%; animation-delay: 1.5s; }
+
+    .project-card {
+      position: relative;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--pink);
+      opacity: 0.7;
+      box-shadow: 0 0 0 4px rgba(248,200,220,0.35);
+    }
+
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 {
+      width: 280px; height: 280px;
+      background: #F8C8DC;
+      top: 20%; left: -80px;
+    }
+    .blob-2 {
+      width: 220px; height: 220px;
+      background: #E8D5F2;
+      bottom: 15%; right: -60px;
+    }
+
+    .works, .header, .footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 750px) {
+      .sticker { display: none; }
+      .header-deco { font-size: 22px; }
+      .blob { display: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- soft blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- floating stickers -->
+  <div class="sticker sticker-1">🌸</div>
+  <div class="sticker sticker-2">✨</div>
+  <div class="sticker sticker-3">☁️</div>
+  <div class="sticker sticker-4">🌷</div>
+  <div class="sticker sticker-5">💫</div>
+  <div class="sticker sticker-6">🎀</div>
+
+
+  <header class="header">
+    <span class="header-deco left">✿</span>
+    <span class="header-deco right">♡</span>
+    <h1>Примеры работ</h1>
+    <p>Нажми на карточку, чтобы открыть материалы</p>
+  </header>
+
+  <section class="works">
+    <div class="projects-grid">
+
+      <!-- 1. Notion -->
+      <div class="project-card" onclick="openModal(1)">
+        
+        <div class="project-image">
+          <img src="cover-notion.jpg" alt="Notion">
+        </div>
+        <div class="project-body">
+          <h3>Notion / Buildin</h3>
+          <p>Шаблоны и организация работы</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 2. Карусель ваби-саби -->
+      <div class="project-card" onclick="openModal(2)">
+        
+        <div class="project-image">
+          <img src="cover-wabi.jpg" alt="Ваби-саби">
+        </div>
+        <div class="project-body">
+          <h3>Карусель ваби-саби</h3>
+          <p>Дизайн карусели в эстетике ваби-саби</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 3. Карусель корейский -->
+      <div class="project-card" onclick="openModal(3)">
+        
+        <div class="project-image">
+          <img src="cover-korean.jpg" alt="Корейский">
+        </div>
+        <div class="project-body">
+          <h3>Карусель корейский</h3>
+          <p>Оформление карусели про корейский</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 4. Трипваер -->
+      <div class="project-card" onclick="openModal(4)">
+        
+        <div class="project-image">
+          <img src="cover-tripwire.jpg" alt="Трипваер">
+        </div>
+        <div class="project-body">
+          <h3>Трипваер</h3>
+          <p>Упаковка и структура трипваера</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 5. Майнд-карта -->
+      <div class="project-card" onclick="openModal(5)">
+        
+        <div class="project-image">
+          <img src="cover-mindmap.jpg" alt="Майнд-карта">
+        </div>
+        <div class="project-body">
+          <h3>Майнд-карта</h3>
+          <p>Визуальная схема проекта и задач</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 6. Пост -->
+      <div class="project-card" onclick="openModal(6)">
+        
+        <div class="project-image">
+          <img src="cover-post.jpg" alt="Пост">
+        </div>
+        <div class="project-body">
+          <h3>Пост</h3>
+          <p>Написание поста для соцсетей</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 7. Презентация -->
+      <div class="project-card" onclick="openModal(7)">
+        
+        <div class="project-image">
+          <img src="cover-presentation.jpg" alt="Презентация">
+        </div>
+        <div class="project-body">
+          <h3>Презентация</h3>
+          <p>Визуал и структура презентации</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 8. Распорядок дня -->
+      <div class="project-card" onclick="openModal(8)">
+        
+        <div class="project-image">
+          <img src="cover-schedule.jpg" alt="Распорядок">
+        </div>
+        <div class="project-body">
+          <h3>Распорядок дня</h3>
+          <p>Планирование дня и недели</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 9. Визуалы -->
+      <div class="project-card" onclick="openModal(9)">
+        
+        <div class="project-image">
+          <img src="cover-visuals.jpg" alt="Визуалы">
+        </div>
+        <div class="project-body">
+          <h3>Визуалы</h3>
+          <p>Референсы и визуальный стиль</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+      <!-- 10. Чат-боты -->
+      <div class="project-card" onclick="openModal(10)">
+        
+        <div class="project-image">
+          <img src="cover-bots.jpg" alt="Чат-боты">
+        </div>
+        <div class="project-body">
+          <h3>Чат-боты</h3>
+          <p>Сценарии и настройка чат-ботов</p>
+          <span class="project-btn">Открыть →</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">Примеры работ</footer>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-header">
+        <h3 id="modalTitle"></h3>
+        <p id="modalDesc"></p>
+      </div>
+      <div class="tabs" id="modalTabs"></div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const projects = {
+
+      // 1. NOTION / BUILDIN — ссылки и фото
+      1: {
+        title: "Notion / Buildin",
+        desc: "Запуск · Оффер · Таблица",
+        tabs: [
+          {
+            name: "Запуск",
+            link: "https://buildin.ai/share/79990a00-9917-46f6-9e8f-e7947f9d9127?code=4A3TCL",
+            images: ["notion-zapusk.jpg"]
+          },
+          {
+            name: "Оффер",
+            link: "https://buildin.ai/share/337c264e-ece8-42b7-b819-fb31815eb169?code=4A3TCL",
+            images: ["notion-offer1.jpg", "notion-offer2.jpg"]
+          },
+          {
+            name: "Таблица",
+            link: "https://buildin.ai/share/d5be1d5d-fefb-4d94-b3cd-139d3d9ff8ad?code=4A3TCL",
+            images: ["notion-table.jpg"]
+          }
+        ]
+      },
+
+      // 2. Карусель ваби-саби — 5 фото
+      2: {
+        title: "Карусель — ваби-саби",
+        desc: "",
+        images: ["wabi1.jpg", "wabi2.jpg", "wabi3.jpg", "wabi4.jpg", "wabi5.jpg"]
+      },
+
+      // 3. Карусель корейский — 5 фото
+      3: {
+        title: "Карусель — корейский стиль",
+        desc: "",
+        images: ["korean1.jpg", "korean2.jpg", "korean3.jpg", "korean4.jpg", "korean5.jpg"]
+      },
+
+      // 4. Трипваер
+      4: {
+        title: "Трипваер",
+        desc: "",
+        images: ["tripwire-img.jpg"],
+        file: { name: "Скачать PDF", url: "tripwire.pdf" }
+      },
+
+      // 5. Майнд-карта + план запуска
+      5: {
+        title: "Майнд-карта",
+        desc: "Запуск курса «Корейский с нуля» за 7 дней",
+        images: ["mindmap.jpg"],
+        file: { name: "Скачать план запуска (PDF)", url: "launch-plan.pdf" }
+      },
+
+      // 6. Пост
+      6: {
+        title: "Пост",
+        desc: "2 фото",
+        images: ["post1.jpg", "post2.jpg"]
+      },
+
+      // 7. Презентация
+      7: {
+        title: "Презентация",
+        desc: "Презентация курса",
+        file: { name: "Скачать презентацию (PDF)", url: "presentation.pdf" }
+      },
+
+      // 8. Распорядок дня
+      8: {
+        title: "Распорядок дня",
+        desc: "2 фото",
+        images: ["schedule1.jpg", "schedule2.jpg"]
+      },
+
+      // 9. Визуалы — готово
+      9: {
+        title: "Визуалы",
+        desc: "Три стиля",
+        tabs: [
+          {
+            name: "Корейский",
+            images: ["visual-korean1.jpg", "visual-korean2.jpg"]
+          },
+          {
+            name: "Beauty салон",
+            images: ["visual-beauty1.jpg", "visual-beauty2.jpg"]
+          },
+          {
+            name: "Продажи",
+            images: ["visual-sales.jpg"]
+          }
+        ]
+      },
+
+      // 10. Чат-боты
+      10: {
+        title: "Чат-боты",
+        desc: "Сценарии и примеры ботов",
+        tabs: [
+          {
+            name: "Корейский",
+            images: ["bot-korean1.jpg", "bot-korean2.jpg", "bot-korean3.jpg"],
+            note: "Бот: @koreannewsc_bot"
+          },
+          {
+            name: "SMM курс",
+            images: ["bot-smm1.jpg", "bot-smm2.jpg", "bot-smm3.jpg"]
+          }
+        ]
+      }
+    };
+
+    function openModal(id) {
+      const p = projects[id];
+      if (!p) return;
+
+      document.getElementById('modalTitle').textContent = p.title;
+      document.getElementById('modalDesc').textContent = p.desc || '';
+
+      const tabsEl = document.getElementById('modalTabs');
+      const bodyEl = document.getElementById('modalBody');
+      tabsEl.innerHTML = '';
+      bodyEl.innerHTML = '';
+
+      if (p.tabs) {
+        p.tabs.forEach((tab, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+          btn.textContent = tab.name;
+          btn.onclick = () => switchTab(i);
+          tabsEl.appendChild(btn);
+
+          const content = document.createElement('div');
+          content.className = 'tab-content' + (i === 0 ? ' active' : '');
+          content.dataset.tab = i;
+
+          if (tab.link) {
+            const linkRow = document.createElement('div');
+            linkRow.className = 'links-row';
+            linkRow.innerHTML = `<a class="file-btn" href="${tab.link}" target="_blank" rel="noopener">Открыть →</a>`;
+            content.appendChild(linkRow);
+          }
+
+          if (tab.images && tab.images.length) {
+            const gal = document.createElement('div');
+            gal.className = 'gallery' + (tab.images.length === 1 ? ' one-col' : '');
+            tab.images.forEach(src => {
+              const img = document.createElement('img');
+              img.src = src;
+              img.alt = tab.name;
+              img.onclick = () => window.open(src, '_blank');
+              gal.appendChild(img);
+            });
+            content.appendChild(gal);
+          }
+
+          if (tab.note) {
+            const noteEl = document.createElement('p');
+            noteEl.style.cssText = 'margin: 20px 0 0; font-size: 15px; color: var(--brown); text-align: center;';
+            noteEl.textContent = tab.note;
+            content.appendChild(noteEl);
+          }
+
+          bodyEl.appendChild(content);
+        });
+      } else {
+        const content = document.createElement('div');
+        content.className = 'tab-content active';
+        content.style.padding = '0 36px 36px';
+
+        if (p.images && p.images.length) {
+          const gal = document.createElement('div');
+          gal.className = 'gallery' + (p.images.length === 1 ? ' one-col' : '');
+          p.images.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = p.title;
+            img.onclick = () => window.open(src, '_blank');
+            gal.appendChild(img);
+          });
+          content.appendChild(gal);
+        } else if (!p.file) {
+          content.innerHTML = '<p style="color:#999">Материалы ещё не загружены</p>';
+        }
+
+        if (p.file) {
+          const linkRow = document.createElement('div');
+          linkRow.className = 'links-row';
+          const url = p.file.url === '#' ? '#' : p.file.url;
+          linkRow.innerHTML = `<a class="file-btn" href="${url}" target="_blank" rel="noopener" ${url==='#' ? 'onclick="alert(\'Пришли ссылку на файл\');return false;"' : ''}>${p.file.name}</a>`;
+          content.appendChild(linkRow);
+        }
+
+        bodyEl.appendChild(content);
+      }
+
+      document.getElementById('modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('.tab-content').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target.id === 'modal') closeModal();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>
